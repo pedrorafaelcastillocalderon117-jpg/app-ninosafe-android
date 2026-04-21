@@ -208,7 +208,7 @@ function App() {
             <div className="input-group"><span className="input-label">Contraseña</span><input className="input-field" type="password" value={passValue} onChange={e => setPassValue(e.target.value)} required /></div>
             <button className="btn-primary" type="submit">{isAuthLoading ? '...' : (authMode === 'login' ? 'Entrar' : 'Registrar')}</button>
             <button className="btn-google" type="button" onClick={handleGoogleLogin}>Continuar con Google</button>
-            <p onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')} style={{textAlign: 'center', marginTop: '20px', cursor: 'pointer', color: var(--primary)}}>
+            <p onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')} style={{textAlign: 'center', marginTop: '20px', cursor: 'pointer', color: 'var(--primary)'}}>
               {authMode === 'login' ? '¿No tienes cuenta? Registrate' : '¿Ya tienes cuenta? Entra'}
             </p>
             <div style={{textAlign: 'center', marginTop: '20px'}}><span onClick={() => setCurrentRoute('onboard')} style={{cursor: 'pointer', color: 'var(--text-secondary)'}}>← Volver</span></div>
