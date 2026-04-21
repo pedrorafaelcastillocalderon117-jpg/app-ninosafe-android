@@ -356,7 +356,7 @@ function App() {
                    height="100%" 
                    frameBorder="0" 
                    style={{border:0}} 
-                   src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCKAhkNSvxQjtljohLR70q7xH7uskeyOvM&center=19.4326,-99.1332&zoom=14&maptype=roadmap" 
+                   src="https://maps.google.com/maps?q=19.4326,-99.1332&z=15&output=embed" 
                    allowFullScreen>
                  </iframe>
               </div>
