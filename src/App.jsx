@@ -347,11 +347,18 @@ function App() {
           <div style={{display: 'flex', flexDirection: 'column', gap: '24px'}}>
             <div className="glass-card" style={{height: '450px', display: 'flex', flexDirection: 'column', padding: '16px'}}>
               <div style={{padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                <h3>Ubicación GPS en Vivo</h3>
+                <h3>Google Maps - Rastreo GPS</h3>
                 <button className="btn-primary" style={{width: 'auto', padding: '10px 20px'}} onClick={addGeofence}>+ Zona Segura</button>
               </div>
               <div style={{flex: 1, background: '#000', borderRadius: '20px', overflow: 'hidden'}}>
-                 <iframe width="100%" height="100%" frameBorder="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-100,18,-98,20&layer=mapnik" style={{filter: 'invert(90%) hue-rotate(180deg)'}}></iframe>
+                 <iframe 
+                   width="100%" 
+                   height="100%" 
+                   frameBorder="0" 
+                   style={{border:0}} 
+                   src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCKAhkNSvxQjtljohLR70q7xH7uskeyOvM&center=19.4326,-99.1332&zoom=14&maptype=roadmap" 
+                   allowFullScreen>
+                 </iframe>
               </div>
             </div>
             
