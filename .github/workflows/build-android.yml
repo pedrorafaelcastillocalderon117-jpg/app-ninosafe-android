@@ -55,6 +55,10 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
+      - name: Obtener Huella SHA-1 (Para Firebase)
+        run: |
+          keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android | grep SHA1 || echo "No se pudo obtener SHA1"
+
       - name: Entregar el APK para Descargar!
         uses: actions/upload-artifact@v4
         with:
