@@ -1,0 +1,6 @@
+{
+  "appId": "com.ninosafe.app",
+  "appName": "NiñoSafe",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

@@ -1,0 +1,55 @@
+name: Build Android APK
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Compilar APK en la Nube
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar Código Repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Instalar Dependencias del Proyecto
+        run: npm install
+
+      - name: Compilar Vista Web (React)
+        run: npm run build
+
+      - name: Instalar Capacitor (Motor Nativo)
+        run: npm install @capacitor/cli @capacitor/core @capacitor/android
+
+      - name: Generar Proyecto de Android (Capacitor)
+        run: npx cap add android
+
+      # Copiar manualmente nuestros archivos de Bloqueo a la carpeta que acaba de crear Capacitor
+      - name: Inyectar Código de Permisos (Modo Niño)
+        run: |
+          cp -r android_native_src/res/xml/* android/app/src/main/res/xml/ || echo "XML copiados"
+          cp android_native_src/com/ninosafe/app/*.java android/app/src/main/java/com/ninosafe/app/ || echo "Java copiados"
+          cp android_native_src/AndroidManifest.xml android/app/src/main/AndroidManifest.xml || echo "Manifest inyectado"
+
+      - name: Instalar y Configurar Java (SDK Android)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Compilar el .APK Final
+        working-directory: ./android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Entregar el APK para Descargar!
+        uses: actions/upload-artifact@v3
+        with:
+          name: NiñoSafe-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk

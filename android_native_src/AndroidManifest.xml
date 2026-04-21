@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ninosafe.app">
+
+    <!-- PERMISOS CRÍTICOS DEL SISTEMA PARA NIÑOSAFE -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Permiso esencial para ubicar al niño por GPS Satelital en tiempo real -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Permiso para que la app inicie automáticamente si apagan y prenden el celular -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    
+    <!-- Permisos agresivos para bloquear la pantalla dibujando sobre otras apps si es necesario -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- Permiso para matar procesos (básico, aunque los forzaremos al Home con Accesibilidad) -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- ACTIVIDAD PRINCIPAL (CAPACITOR - REACT VITE) -->
+        <!-- Aquí es donde se "dibuja" todo tu diseño visual HTML/CSS/JS que armamos en App.jsx -->
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <!-- SERVICIO 1: ADMINISTRADOR DE DISPOSITIVOS -->
+        <!-- Declaración legal de que este archivo protegerá el teléfono -->
+        <receiver android:name=".MyDeviceAdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin_policies" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- SERVICIO 2: ESCUDO VIGÍA DE ACCESIBILIDAD -->
+        <!-- Declaración legal de que este servicio interceptará el sistema y leerá ventanas activas -->
+        <service android:name=".AppBlockerAccessibilityService"
+                 android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice"
+                       android:resource="@xml/accessibility_service_config" />
+        </service>
+
+    </application>
+</manifest>
