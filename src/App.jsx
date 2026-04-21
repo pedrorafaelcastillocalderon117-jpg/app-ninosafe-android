@@ -60,11 +60,21 @@ function App() {
   const [isSessionLocked, setIsSessionLocked] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   
+  // Guardamos solo el nombre del icono para evitar errores de serialización (Black Screen Fix)
   const [appsData, setAppsData] = useLocalStorage('appsData', [
-    {id: 1, name: 'YouTube', type: 'Entretenimiento', bg: '#FF0000', time: 'Acceso Total', active: true, icon: <IconPlay />},
-    {id: 2, name: 'Roblox', type: 'Juegos', bg: '#00FF9D', time: '1h diaria', active: true, icon: <IconGame />},
-    {id: 3, name: 'Google Chrome', type: 'Filtro Activo', bg: '#00F0FF', time: 'Seguro', active: true, icon: <IconGlobe />}
+    {id: 1, name: 'YouTube', type: 'Entretenimiento', bg: '#FF0000', time: 'Acceso Total', active: true, iconName: 'play'},
+    {id: 2, name: 'Roblox', type: 'Juegos', bg: '#00FF9D', time: '1h diaria', active: true, iconName: 'game'},
+    {id: 3, name: 'Google Chrome', type: 'Seguro', bg: '#00F0FF', time: 'Filtrado', active: true, iconName: 'globe'}
   ]);
+
+  const renderIcon = (name) => {
+    switch(name) {
+      case 'play': return <IconPlay />;
+      case 'game': return <IconGame />;
+      case 'globe': return <IconGlobe />;
+      default: return <IconPhone />;
+    }
+  };
 
   const [geofences, setGeofences] = useLocalStorage('geofences', [
     { id: 1, name: 'Escuela Primaria', radius: '500m', active: true },
@@ -152,8 +162,6 @@ function App() {
     }
   };
 
-  // --- Screens ---
-
   if (isSessionLocked) {
     return (
       <div className="auth-wrapper">
@@ -236,12 +244,8 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Sidebar / Bottom Nav */}
       <aside className="sidebar">
-        <div className="brand">
-          <IconShield className="brand-icon" size={32} />
-          <span className="brand-text">NiñoSafe</span>
-        </div>
+        <div className="brand"><IconShield className="brand-icon" size={32} /><span className="brand-text">NiñoSafe</span></div>
         <nav className="nav-links">
           <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}><IconDash /> <span>Panel</span></div>
           <div className={`nav-item ${activeTab === 'location' ? 'active' : ''}`} onClick={() => setActiveTab('location')}><IconMap /> <span>Rastreo</span></div>
@@ -255,7 +259,6 @@ function App() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="main-content">
         <header className="header">
           <div className="header-title">
@@ -277,93 +280,41 @@ function App() {
         </header>
 
         {activeTab === 'dashboard' && (
-          <>
-            <div className="dashboard-grid">
-              <div className="glass-card">
-                <div className="card-icon-box"><IconPhone /></div>
-                <p className="card-label">Tiempo Restante</p>
-                <p className="card-value">01:45:00</p>
-                <div style={{width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px'}}>
-                  <div style={{width: '70%', height: '100%', background: 'var(--primary)', borderRadius: '2px'}}></div>
-                </div>
-              </div>
-              <div className="glass-card">
-                <div className="card-icon-box" style={{color: 'var(--success)', background: 'rgba(0,255,157,0.1)'}}><IconMap /></div>
-                <p className="card-label">Ubicación</p>
-                <p className="card-value" style={{fontSize: '20px'}}>Av. Central #44</p>
-                <p style={{fontSize: '12px', color: 'var(--success)'}}>● En línea ahora</p>
-              </div>
-              <div className="glass-card">
-                <div className="card-icon-box" style={{color: 'var(--accent)', background: 'rgba(138,43,226,0.1)'}}><IconShield /></div>
-                <p className="card-label">Apps Bloqueadas</p>
-                <p className="card-value">12</p>
-                <p style={{fontSize: '12px', color: 'var(--text-secondary)'}}>Intentos hoy: 4</p>
+          <div className="dashboard-grid">
+            <div className="glass-card">
+              <div className="card-icon-box"><IconPhone /></div>
+              <p className="card-label">Tiempo Restante</p>
+              <p className="card-value">01:45:00</p>
+              <div style={{width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px'}}>
+                <div style={{width: '70%', height: '100%', background: 'var(--primary)', borderRadius: '2px'}}></div>
               </div>
             </div>
-
-            <h2 className="section-title">Actividad Reciente</h2>
-            <div className="apps-container">
+            <div className="glass-card">
+              <div className="card-icon-box" style={{color: 'var(--success)', background: 'rgba(0,255,157,0.1)'}}><IconMap /></div>
+              <p className="card-label">Ubicación</p>
+              <p className="card-value" style={{fontSize: '20px'}}>Av. Central #44</p>
+            </div>
+            <div className="apps-container" style={{gridColumn: '1 / -1', marginTop: '20px'}}>
               {appsData.map(app => (
                 <div className="app-row" key={app.id}>
-                  <div className="app-icon-circle" style={{background: app.bg + '44', color: app.bg}}>{app.icon}</div>
-                  <div className="app-meta">
-                    <p className="app-name">{app.name}</p>
-                    <p className="app-type">{app.type}</p>
-                  </div>
-                  <div style={{textAlign: 'right', marginRight: '20px'}}>
-                    <p style={{fontSize: '14px', fontWeight: '600', color: app.active ? 'var(--primary)' : 'var(--danger)'}}>{app.time}</p>
-                  </div>
-                  <label className="switch">
-                    <input type="checkbox" checked={app.active} onChange={() => handleToggleApp(app.id)} />
-                    <span className="slider"></span>
-                  </label>
+                  <div className="app-icon-circle" style={{background: app.bg + '44', color: app.bg}}>{renderIcon(app.iconName)}</div>
+                  <div className="app-meta"><p className="app-name">{app.name}</p><p className="app-type">{app.type}</p></div>
+                  <label className="switch"><input type="checkbox" checked={app.active} onChange={() => handleToggleApp(app.id)} /><span className="slider"></span></label>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         {activeTab === 'location' && (
           <div className="glass-card" style={{height: '500px', display: 'flex', flexDirection: 'column'}}>
-            <div style={{marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <h3>Mapa en Tiempo Real</h3>
-              <button className="btn-primary" style={{width: 'auto', padding: '8px 20px'}} onClick={addGeofence}>+ Zona Segura</button>
-            </div>
-            <div style={{flex: 1, background: '#000', borderRadius: '15px', overflow: 'hidden', position: 'relative'}}>
-              <iframe width="100%" height="100%" frameBorder="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-100,18,-98,20&layer=mapnik" style={{filter: 'invert(90%) hue-rotate(180deg)'}}></iframe>
-            </div>
-            <div style={{marginTop: '20px', display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '10px'}}>
-              {geofences.map(f => (
-                <div key={f.id} style={{padding: '10px 20px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', border: f.active ? '1px solid var(--success)' : '1px solid var(--border)', flexShrink: 0}}>
-                  <p style={{fontSize: '14px'}}>{f.name}</p>
-                  <p style={{fontSize: '11px', color: 'var(--text-secondary)'}}>{f.radius}</p>
-                </div>
-              ))}
+            <h3>Mapa en Tiempo Real</h3>
+            <div style={{flex: 1, background: '#000', borderRadius: '15px', overflow: 'hidden', marginTop: '10px'}}>
+               <iframe width="100%" height="100%" frameBorder="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-100,18,-98,20&layer=mapnik" style={{filter: 'invert(90%) hue-rotate(180deg)'}}></iframe>
             </div>
           </div>
         )}
 
-        {activeTab === 'settings' && (
-          <div className="dashboard-grid">
-            <div className="glass-card">
-              <h3>Seguridad del Panel</h3>
-              <div className="input-group" style={{marginTop: '20px'}}>
-                <span className="input-label">Cambiar PIN</span>
-                <input className="input-field" type="password" placeholder="Nuevo PIN 4 digitos" onBlur={(e) => {
-                  if (e.target.value.length === 4) setParentPin(e.target.value);
-                }} />
-              </div>
-              <button className="btn-primary" style={{marginTop: '10px'}} onClick={() => signOut(auth).then(() => setCurrentRoute('onboard'))}>Cerrar Sesión</button>
-            </div>
-            <div className="glass-card" style={{border: '1px solid var(--danger)'}}>
-              <h3 style={{color: 'var(--danger)'}}>Zona de Riesgo</h3>
-              <p style={{fontSize: '13px', color: 'var(--text-secondary)', marginTop: '10px'}}>Borrar todos los datos de supervisión de este dispositivo.</p>
-              <button className="btn-lock" style={{marginTop: '20px', fontSize: '14px', padding: '12px'}}>Eliminar Dispositivo</button>
-            </div>
-          </div>
-        )}
-
-        {/* FAB for Mobile */}
         <button className={`btn-lock mobile-lock-fab ${deviceLocked ? 'unlocked' : ''}`} onClick={handleToggleDeviceLock}>
           {deviceLocked ? <IconUnlock /> : <IconLock />}
         </button>
