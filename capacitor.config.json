@@ -2,5 +2,10 @@
   "appId": "com.ninosafe.app",
   "appName": "NiñoSafe",
   "webDir": "dist",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "hostname": "ninosafe.app",
+    "cleartext": true
+  }
 }
