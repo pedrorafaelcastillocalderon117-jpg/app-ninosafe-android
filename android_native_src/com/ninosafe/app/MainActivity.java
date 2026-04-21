@@ -13,11 +13,6 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Aquí es donde en el futuro pediremos directamente los permisos nativos 
-        // antes de mostrar la pantalla (Ej: Permiso de GPS o Accesibilidad).
-        
-        // Logica para iniciar el Servicio en Segundo Plano (Por ejemplo, el rastreador de GPS constante)
-        // se puede integrar desde aquí cuando se construya el plugin completo de GPS.
+        registerPlugin(AppScannerPlugin.class);
     }
 }
