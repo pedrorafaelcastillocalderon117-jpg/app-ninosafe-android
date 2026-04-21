@@ -31,12 +31,11 @@ body {
   min-height: 100vh;
   margin: 0;
   display: flex;
-  overflow: hidden;
 }
 
 #root {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   display: flex;
 }
 
@@ -427,3 +426,97 @@ input:checked + .slider:before {
 .lock-button:active {
   transform: translateY(2px);
 }
+
+/* RESPONSIVENESS */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column-reverse;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    padding: 12px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .nav-links {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    gap: 4px;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    padding: 8px 4px;
+    font-size: 10px;
+    gap: 4px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-item.active {
+    background: transparent;
+    border-left: none;
+    border-bottom: 2px solid var(--primary);
+    color: var(--primary);
+  }
+
+  .main-content {
+    padding: 0 0 80px 0;
+    width: 100%;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .card-value {
+    font-size: 28px;
+  }
+
+  .lock-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: auto;
+    padding: 12px;
+    margin-top: 0;
+    z-index: 1001;
+    border-radius: 50%;
+  }
+  
+  .lock-button span {
+    display: none;
+  }
+}
+

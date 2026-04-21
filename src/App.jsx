@@ -163,6 +163,19 @@ function App() {
     }
   };
 
+  const addGeofence = () => {
+    const name = window.prompt("Nombre de la nueva zona segura:", "Parque");
+    if (name) {
+      const newFence = {
+        id: Date.now(),
+        name,
+        radius: "300m",
+        active: true
+      };
+      setGeofences([...geofences, newFence]);
+    }
+  };
+
   const removeUrl = (urlToRemove) => setBlockedUrls(blockedUrls.filter(url => url !== urlToRemove));
 
   const getIconForApp = (id) => {
@@ -530,7 +543,7 @@ function App() {
           className="lock-button" 
           onClick={handleToggleDeviceLock}
           style={{ background: deviceLocked ? 'linear-gradient(135deg, #00FF9D, #00B873)' : 'linear-gradient(135deg, rgba(255, 51, 102, 0.8), rgba(200, 20, 70, 0.8))', padding: '20px', cursor: 'pointer' }}>
-          {deviceLocked ? <IconUnlock size={24} /> : <IconLock size={24} />} {deviceLocked ? 'Restaurar Pantalla' : 'Bloquear Teléfono'}
+          {deviceLocked ? <IconUnlock size={24} /> : <IconLock size={24} />} <span>{deviceLocked ? 'Restaurar Pantalla' : 'Bloquear Teléfono'}</span>
         </button>
       </aside>
 
