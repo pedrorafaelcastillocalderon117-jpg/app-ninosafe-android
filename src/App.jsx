@@ -8,7 +8,8 @@ import {
   signOut, 
   onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithRedirect,
+  getRedirectResult
 } from 'firebase/auth';
 
 // Hook personalizado para persistencia de datos (Local Storage)
@@ -100,6 +101,20 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
+
+    // Capturar el resultado del Login con Google al regresar del navegador (Android Fix)
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          setCurrentUser(result.user);
+          setCurrentRoute('dashboard');
+          setActiveTab('dashboard');
+        }
+      })
+      .catch((error) => {
+        console.error("Error en redirect de Google:", error);
+      });
+
     return () => unsubscribe();
   }, []);
 
@@ -212,17 +227,12 @@ function App() {
     setIsAuthLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      // Las cuentas de Google ya están verificadas. Entramos directo.
-      setCurrentUser(result.user);
-      setCurrentRoute('dashboard');
-      setActiveTab('dashboard');
+      // Firebase para Android en WebView requiere Redirect en vez de Popup
+      await signInWithRedirect(auth, provider);
     } catch (err) {
-      if (err.code !== 'auth/popup-closed-by-user') {
-         setAuthError('Error al entrar con Google: ' + err.message);
-      }
+      setAuthError('Error al iniciar redirección: ' + err.message);
+      setIsAuthLoading(false);
     }
-    setIsAuthLoading(false);
   };
 
   const handleLogoutReal = async () => {
