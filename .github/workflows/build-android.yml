@@ -15,7 +15,14 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: '22'
+
+      - name: Forzar Actualización Manual de Node (Antifallos)
+        run: |
+          sudo npm cache clean -f
+          sudo npm install -g n
+          sudo n 22
+          node -v
 
       - name: Instalar Dependencias del Proyecto
         run: npm install
