@@ -251,7 +251,7 @@ function App() {
           <p style={{color: 'var(--text-secondary)', margin: '16px 0 32px'}}>Este dispositivo está bajo la supervisión de NiñoSafe. Todas las actividades sospechosas serán reportadas al padre.</p>
           <div className="glass-card" style={{background: 'rgba(255,255,255,0.03)', padding: '24px', marginBottom: '32px'}}>
              <p style={{fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px'}}>Estado del Vínculo</p>
-             <p style={{fontSize: '24px', fontWeight: '700', marginTop: '8px', color: var(--success)}}>● VINCULADO</p>
+             <p style={{fontSize: '24px', fontWeight: '700', marginTop: '8px', color: 'var(--success)'}}>● VINCULADO</p>
              <p style={{fontSize: '11px', marginTop: '8px'}}>ID: SAF-ANDROID-772X</p>
           </div>
           <button className="btn-primary" style={{background: 'transparent', border: '1px solid var(--border)', color: 'white'}} onClick={() => setCurrentRoute('onboard')}>Cerrar Modo Niño</button>
